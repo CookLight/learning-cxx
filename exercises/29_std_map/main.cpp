@@ -5,13 +5,16 @@
 // READ: `std::unordered_map` <https://zh.cppreference.com/w/cpp/container/unordered_map>
 
 template<class k, class v>
-bool key_exists(std::map<k, v> const &map, k const &key) {
+bool key_exists(std::map<k, v> const &pmap, k const &key) {
     // TODO: 实现函数
+
+    return  pmap.find(key) != pmap.end();
 }
 
 template<class k, class v>
 void set(std::map<k, v> &map, k key, v value) {
     // TODO: 实现函数
+    map[key] = value;
 }
 
 // ---- 不要修改以下代码 ----
@@ -21,6 +24,7 @@ int main(int argc, char **argv) {
     std::map<std::string, std::string> secrets;
 
     set(secrets, "hello"s, "world"s);
+//    std::cout<<secrets["hello"s];
     ASSERT(key_exists(secrets, "hello"s), "\"hello\" shoud be in `secrets`");
     ASSERT(!key_exists(secrets, "foo"s), "\"foo\" shoud not be in `secrets`");
 

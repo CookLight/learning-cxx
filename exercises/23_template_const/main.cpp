@@ -11,6 +11,12 @@ struct Tensor {
     Tensor(unsigned int const shape_[N]) {
         unsigned int size = 1;
         // TODO: 填入正确的 shape 并计算 size
+        for (unsigned int i = 0; i < N; ++i) {
+            this->shape[i] = shape_[i];
+        }
+        for (unsigned int i = 0; i < N; ++i) {
+            size *= this->shape[i];
+        }
         data = new T[size];
         std::memset(data, 0, size * sizeof(T));
     }
@@ -21,10 +27,11 @@ struct Tensor {
     // 为了保持简单，禁止复制和移动
     Tensor(Tensor const &) = delete;
     Tensor(Tensor &&) noexcept = delete;
-
+    //非const实例可以调用
     T &operator[](unsigned int const indices[N]) {
         return data[data_index(indices)];
     }
+    //const实例可以调用
     T const &operator[](unsigned int const indices[N]) const {
         return data[data_index(indices)];
     }
@@ -32,9 +39,15 @@ struct Tensor {
 private:
     unsigned int data_index(unsigned int const indices[N]) const {
         unsigned int index = 0;
+        unsigned int  tbound[N];tbound[N-1]=1;
+        for (int i = N-2; i >= 0; --i) {
+            tbound[i] = tbound[i+1]*shape[i+1];
+        }
+
         for (unsigned int i = 0; i < N; ++i) {
             ASSERT(indices[i] < shape[i], "Invalid index");
             // TODO: 计算 index
+            index += indices[i]*tbound[i];
         }
         return index;
     }
